@@ -48,6 +48,7 @@
     ],
 
     // Configures path mapping for modules, simplifying imports
+    "baseUrl": ".",
     "paths": {
       "@/*": [
         "./src/*"  // Maps `@/` to the `src/` folder
@@ -55,7 +56,7 @@
     },
 
     // Adds additional global type definitions
-    "types": ["node", "msw"] // Ensures types for Node.js and MSW (mocking service worker)
+    "types": ["node"]  // Remove "msw" from types
   },
 
   "include": [
