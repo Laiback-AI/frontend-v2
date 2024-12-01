@@ -3,16 +3,18 @@ import { AuthResponse, LoginRequest, SignUpRequest } from '../../types/authTypes
 import { API_BASE_URL } from '../../config';
 
 export const loginUser = async (credentials: LoginRequest): Promise<AuthResponse> => {
-  console.log('API URL being used service:', `${API_BASE_URL}/api/v1/auth/signup`);
   try {
+    console.log('Sending login request...');
     const response = await loginUserApi(credentials);
-    return response;
+    
+    if (response && response.token) {
+      console.log('Login successful, received token');
+      return response;
+    } else {
+      throw new Error('Invalid response from server');
+    }
   } catch (error: any) {
-    console.error('Full error details:', {
-      message: error.message,
-      response: error.response,
-      request: error.request
-    });
+    console.error('Login service error:', error);
     throw error;
   }
 };

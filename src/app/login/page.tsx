@@ -3,15 +3,18 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import AuthForm from '../../components/auth/AuthForm';
-import { useAuth } from '../../app/hooks/useAuth';
+import { useAuthStore } from '../../state/stores/authStore';
 
 export default function LoginPage() {
-    const { isAuthenticated } = useAuth();
+    const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
     const router = useRouter();
 
     useEffect(() => {
+        console.log('Auth state changed:', { isAuthenticated });
+
         if (isAuthenticated) {
-            router.push('/projects');
+            console.log('User is authenticated, redirecting to projects...');
+            router.replace('/projects');
         }
     }, [isAuthenticated, router]);
 

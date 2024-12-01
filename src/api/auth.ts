@@ -3,11 +3,10 @@ import { AuthResponse, LoginRequest, SignUpRequest } from '../types/authTypes';
 import { API_BASE_URL } from '../config';
 import { useCookieStore } from '../state/stores/cookies';
 import { use } from 'react';
+//import { getHeaders } from '../utils/getHeaders';
+
 const API_URL = `${API_BASE_URL}/api/v1/auth`;
 
-/**
- * Common headers for API requests.
- */
 const getHeaders = () => {
   const { csrfToken } = useCookieStore.getState();
   return {
@@ -26,6 +25,7 @@ export const loginUserApi = async (credentials: LoginRequest): Promise<AuthRespo
   try {
     console.log('Making API call to:', `${API_URL}/login/`);
     console.log('Headers:', getHeaders());
+    const headers = getHeaders();
     console.log('CSRF Token:', useCookieStore.getState().csrfToken);
     const response: AxiosResponse<AuthResponse> = await axios.post(
       `${API_URL}/login/`,
