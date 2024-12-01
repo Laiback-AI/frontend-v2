@@ -38,9 +38,9 @@ module.exports = {
         light: {
           layout: {
             boxShadow: {
-              small: "0px 10px 18px rgba(0,0,0,0.1)",
-              medium: "0px 15px 28px rgba(0,0,0,0.12)",
-              large: "0px 30px 50px rgba(0,0,0,0.15)",
+              small: "0px 0x 20px rgba(0,0,0,0.15)",
+              medium: "0px 0px 20px rgba(0,0,0,0.18)",
+              large: "0px 0px 20px rgba(0,0,0,0.25)",
             },
             hoverOpacity: "0.6",
           },
@@ -87,9 +87,9 @@ module.exports = {
         dark: {
           layout: {
             boxShadow: {
-              small: "0px 10px 18px rgba(171, 168, 58, 0.8)",
-              medium: "0px 15px 30px rgba(171, 168, 58, 0.8)",
-              large: "0px 30px 50px rgba(171, 168, 58, 0.8)",
+              small: "0px 0px 20px rgba(171, 168, 58, 0.4)",
+              medium: "0px 0px 20px rgba(171, 168, 58, 0.4)",
+              large: "0px 0px 20px rgba(171, 168, 58, 0.4)",
             },
             hoverOpacity: "0.6",
           },

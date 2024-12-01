@@ -1,24 +1,28 @@
-// Common structure for login response
 export interface AuthResponse {
+  message: string;
   token: string;
-  user: User;
+  user_id: number;
+  account_id: number;
 }
 
-// Separate structure for sign-up response
-export interface SignUpResponse {
-  token: string;
-  user: {
-    id: number;
-    username: string;
-    email: string;
-    name: string;  // No undefined
-    password?: string; // Only in sign-up
-  };
+export interface SignUpRequest {
+  email: string;
+  password: string;
+  name: string;
+  surname: string;
+  account_name: string;
+  is_admin: boolean;
+}
+
+export interface LoginRequest {
+  email: string;
+  password: string;
 }
 
 export interface User {
   id: number;
-  username: string;
   email: string;
   name: string;
+  surname: string;
+  account_name: string;
 }
