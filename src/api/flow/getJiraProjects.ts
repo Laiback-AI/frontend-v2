@@ -11,18 +11,22 @@ const getHeaders = () => {
     };
 };
 
-const API_URL = `${API_BASE_URL}/api/v1/backlog`;
+const API_URL = `${API_BASE_URL}/api/v1/jira`;
 
-export const generateProjectQuestions = async (
-    userExplanation: string,
-    concept?: string
+export const postJiraProjects = async (
+    jiraEmail: string,
+    jiraToken: string,
+    jiraUrl?: string
 ) => {
-    return await axios.post(`${API_URL}/generate-questions/`,
-        {
-    user_explanation: userExplanation,
-    concept: concept || '',
+    return await axios.post(
+    `${API_URL}/projects/`,
+    {
+        jira_email: jiraEmail,
+        jira_token: jiraToken,
+        jira_url: jiraUrl,
     },
     {
         headers: getHeaders(),
-    });
+    }
+    );
 };
