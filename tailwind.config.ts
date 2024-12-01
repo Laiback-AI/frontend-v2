@@ -48,37 +48,43 @@ module.exports = {
             background: "#FFFFFF",
             foreground: "#11181C",
             primary: {
-              50: "#e6f1fe",
-              100: "#cce3fd",
-              200: "#99c7fb",
-              300: "#66aaf9",
-              400: "#338ef7",
-              500: "#006FEE",
-              600: "#005bc4",
-              700: "#004493",
-              800: "#002e62",
-              900: "#001731",
-              DEFAULT: "#006FEE",
+              50: "hsla(70, 65%, 43%, 1)",  // Base color
+              100: "hsla(70, 65%, 46%, 1)",
+              200: "hsla(70, 65%, 48%, 1)",
+              300: "hsla(70, 65%, 50%, 1)",
+              400: "hsla(70, 65%, 53%, 1)",
+              500: "hsla(70, 65%, 55%, 1)", // Main primary color
+              600: "hsla(70, 65%, 58%, 1)",
+              700: "hsla(70, 65%, 61%, 1)",
+              800: "hsla(70, 65%, 64%, 1)",
+              900: "hsla(70, 65%, 67%, 1)",
+              DEFAULT: "hsla(70, 65%, 55%, 1)", // Default primary color
               foreground: "#FFFFFF",
             },
             secondary: {
-              50: "#f8f9fa",
-              DEFAULT: "#6c757d",
-              foreground: "#FFFFFF",
+              50: "hsla(0, 0%, 99%, 0.25)",
+              100: "hsla(0, 0%, 99%, 0.5)",
+              200: "hsla(0, 0%, 99%, 0.75)",
+              300: "hsla(0, 0%, 100%, 1)",
+              400: "hsla(0, 0%, 90%, 1)",
+              500: "hsla(0, 0%, 85%, 1)",
+              600: "hsla(0, 0%, 80%, 1)",
+              DEFAULT: "hsla(0, 0%, 75%, 1)",  // Light gray
+              foreground: "#000000",
             },
             success: {
-              50: "#e8f5e9",
-              DEFAULT: "#28a745",
+              50: "hsla(130, 60%, 95%, 1)",
+              DEFAULT: "hsla(130, 60%, 55%, 1)",
               foreground: "#FFFFFF",
             },
             warning: {
-              50: "#fff3e0",
-              DEFAULT: "#ffc107",
+              50: "hsla(40, 100%, 95%, 1)",
+              DEFAULT: "hsla(40, 100%, 60%, 1)",
               foreground: "#000000",
             },
             danger: {
-              50: "#ffebee",
-              DEFAULT: "#dc3545",
+              50: "hsla(360, 100%, 95%, 1)",
+              DEFAULT: "hsla(360, 100%, 60%, 1)",
               foreground: "#FFFFFF",
             },
           },
@@ -93,22 +99,64 @@ module.exports = {
             hoverOpacity: "0.9",
           },
           colors: {
-            background: "#000000",
-            foreground: "#ECEDEE",
+            background: "#11181C",  // Dark background
+            foreground: "#ECEDEE",  // Light text for dark theme
             primary: {
-              50: "#001731",
-              100: "#002e62",
-              200: "#004493",
-              300: "#005bc4",
-              400: "#006FEE",
-              500: "#338ef7",
-              600: "#66aaf9",
-              700: "#99c7fb",
-              800: "#cce3fd",
-              900: "#e6f1fe",
-              DEFAULT: "#338ef7",
+              50: "hsla(70, 47%, 58%, 1)",  // Base color for dark theme
+              100: "hsla(70, 47%, 60%, 1)",
+              200: "hsla(70, 47%, 62%, 1)",
+              300: "hsla(70, 47%, 64%, 1)",
+              400: "hsla(70, 47%, 66%, 1)",
+              500: "hsla(70, 47%, 68%, 1)", // Darker primary color
+              600: "hsla(70, 47%, 70%, 1)",
+              700: "hsla(70, 47%, 72%, 1)",
+              800: "hsla(70, 47%, 74%, 1)",
+              900: "hsla(70, 47%, 76%, 1)",
+              DEFAULT: "hsla(70, 47%, 68%, 1)",
               foreground: "#FFFFFF",
             },
+            secondary: {
+              50: "hsla(0, 0%, 8%, 0.25)",
+              100: "hsla(0, 0%, 8%, 0.5)",
+              200: "hsla(0, 0%, 8%, 0.75)",
+              300: "hsla(0, 0%, 8%, 1)",
+              400: "hsla(0, 0%, 10%, 1)",
+              500: "hsla(0, 0%, 15%, 1)",
+              600: "hsla(0, 0%, 18%, 1)",
+              DEFAULT: "hsla(0, 0%, 20%, 1)", // Dark gray
+              foreground: "#FFFFFF",
+            },
+            success: {
+              50: "hsla(130, 60%, 85%, 1)",
+              DEFAULT: "hsla(130, 60%, 45%, 1)",
+              foreground: "#FFFFFF",
+            },
+            warning: {
+              50: "hsla(40, 100%, 85%, 1)",
+              DEFAULT: "hsla(40, 100%, 50%, 1)",
+              foreground: "#FFFFFF",
+            },
+            danger: {
+              50: "hsla(360, 100%, 85%, 1)",
+              DEFAULT: "hsla(360, 100%, 50%, 1)",
+              foreground: "#FFFFFF",
+            },
+          },
+        },
+        light_accent: {
+          colors: {
+            background: "hsla(70, 76%, 32%, 1)", // Light accent background
+            foreground: "hsla(0, 0%, 82%, 1)",
+            accent: "hsla(70, 76%, 32%, 1)",
+            secondary: "hsla(250, 50%, 95%, 1)", // Accent light color
+          },
+        },
+        dark_accent: {
+          colors: {
+            background: "hsla(70, 76%, 46%, 1)", // Dark accent background
+            foreground: "hsla(0, 0%, 46%, 1)",
+            accent: "hsla(70, 76%, 46%, 1)",
+            secondary: "hsla(250, 50%, 90%, 1)", // Accent dark color
           },
         },
       },
