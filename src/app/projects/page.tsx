@@ -13,6 +13,7 @@ import {
     TableColumn,
     TableRow,
     TableCell,
+    Link,
     User
 } from "@nextui-org/react";
 import { useState } from "react";
@@ -70,7 +71,11 @@ export default function ProjectsPage() {
         <div className="w-full max-w-7xl mx-auto p-4">
             <div className="flex justify-between items-center mb-6">
                 <h1 className="text-2xl font-bold">Projects</h1>
-                <Button color="primary">New Project</Button>
+                <Link href="/createbatch">
+                    <Button color="primary">
+                        New Project
+                    </Button>
+                </Link>
             </div>
 
             <div className="grid gap-4">
@@ -122,6 +127,6 @@ export default function ProjectsPage() {
                     </TableBody>
                 </Table>
             </div>
-        </div>
+        </div >
     );
 }

@@ -3,6 +3,7 @@ import { AuthResponse, LoginRequest, SignUpRequest } from '../types/authTypes';
 import { API_BASE_URL } from '../config';
 import { useCookieStore } from '../state/stores/cookies';
 import { use } from 'react';
+import { withCsrfToken } from '../services/auth/cookiesService';
 //import { getHeaders } from '../utils/getHeaders';
 
 const API_URL = `${API_BASE_URL}/api/v1/auth`;
@@ -22,31 +23,43 @@ const getHeaders = () => {
  * @returns Promise<AuthResponse>
  */
 export const loginUserApi = async (credentials: LoginRequest): Promise<AuthResponse> => {
-  try {
-    console.log('Making API call to:', `${API_URL}/login/`);
-    console.log('Headers:', getHeaders());
-    const headers = getHeaders();
-    console.log('CSRF Token:', useCookieStore.getState().csrfToken);
-    const response: AxiosResponse<AuthResponse> = await axios.post(
-      `${API_URL}/login/`,
-      {
-        email: credentials.email,
-        password: credentials.password,
-      },
-      {
-        headers: getHeaders(),
+  return withCsrfToken(async () => {
+    try {
+      const headers = getHeaders();
+      console.log('CSRF Token:', useCookieStore.getState().csrfToken);
+      console.log('Headers:', headers);
+
+      const response = await fetch(`${API_URL}/login/`, {
+        method: 'POST',
+        headers: headers,
+        body: JSON.stringify({
+          email: credentials.email,
+          password: credentials.password,
+        }),
+        credentials: 'include', // This is important for cookies
+      });
+
+      if (!response.ok) {
+        // Handle non-2xx responses
+        const errorData = await response.json();
+        throw {
+          status: response.status,
+          data: errorData,
+          headers: Object.fromEntries(response.headers.entries()),
+        };
       }
-    );
-    
-    return response.data;
-  } catch (error: any) {
-    console.error('Login API Error:', {
-      status: error.response?.status,
-      data: error.response?.data,
-      headers: error.response?.headers,
-    });
-    throw error;
-  }
+
+      const data: AuthResponse = await response.json();
+      return data;
+    } catch (error: any) {
+      console.error('Login API Error:', {
+        status: error.status,
+        data: error.data,
+        headers: error.headers,
+      });
+      throw error;
+    }
+  });
 };
 
 /**

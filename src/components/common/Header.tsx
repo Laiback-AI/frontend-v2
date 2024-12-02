@@ -35,7 +35,7 @@ export default function Header() {
             onMenuOpenChange={setIsMenuOpen}
         >
             <NavbarBrand>
-                <Link href="/main" className="font-bold text-inherit">
+                <Link href="/projects" className="font-bold text-inherit">
                     LAIBACK
                 </Link>
             </NavbarBrand>

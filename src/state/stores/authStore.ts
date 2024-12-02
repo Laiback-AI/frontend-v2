@@ -3,81 +3,91 @@ import { User } from '../../types/authTypes' // Import the shared User type
 
 // Define the authentication state
 interface AuthState {
-  user: User | null;
   token: string | null;
+  userId: number | null;
+  accountId: number | null;
   isAuthenticated: boolean;
-  login: (token: string, user: User) => void;
-  logout: () => void;
-  checkAuth: () => boolean;
+  setAuthData: (data: { 
+    token: string; 
+    user_id: number; 
+    account_id: number 
+  }) => void;
+  clearAuth: () => void;
+  getToken: () => string | null;
+  login: (token: string, userId: number, accountId: number) => void;
 }
+
+const getInitialToken = () => {
+  if (typeof window !== 'undefined') {
+    return localStorage.getItem('token');
+  }
+  return null;
+};
+
+// Debug helper
+const logState = (state: AuthState) => {
+  console.log('=== Zustand State Debug ===');
+  console.log('Auth Store State:', {
+    token: state.token,
+    userId: state.userId,
+    accountId: state.accountId,
+    isAuthenticated: state.isAuthenticated
+  });
+};
 
 // Create the store
 export const useAuthStore = create<AuthState>((set, get) => ({
-  user: null,
-  token: null,
+  token: getInitialToken(),
+  userId: null,
+  accountId: null,
   isAuthenticated: false,
 
-  login: (token, user) => {
-    try {
-      console.log('Setting auth state...', { hasToken: !!token, hasUser: !!user });
-      
-      localStorage.setItem('token', token);
-      localStorage.setItem('user', JSON.stringify(user));
-      
-      set({ 
-        token, 
-        user, 
-        isAuthenticated: true 
-      });
-      
-      console.log('Auth state updated:', {
-        isAuthenticated: get().isAuthenticated,
-        hasToken: !!get().token,
-        hasUser: !!get().user
-      });
-    } catch (error) {
-      console.error('Error during login:', error);
-    }
-  },
-
-  logout: () => {
-    try {
-      localStorage.removeItem('token');
-      localStorage.removeItem('user');
-      set({ 
-      token: null, 
-      user: null, 
-      isAuthenticated: false // Set to false after logout
+  setAuthData: (data) => {
+    set((state) => {
+      const newState = {
+        ...state,
+        token: data.token,
+        userId: data.user_id,
+        accountId: data.account_id,
+        isAuthenticated: true
+      };
+      logState(newState);
+      return newState;
     });
-    console.log('Auth state cleared after logout');
-  } catch (error) {
-    console.error('Error clearing auth state:', error);
-  }
   },
 
-  checkAuth: () => {
-    try { 
-      const token = get().token || localStorage.getItem('token');
-      
-      if (!get().user && localStorage.getItem('user')) {
-        const user = JSON.parse(localStorage.getItem('user') || '{}');
-        set({ user });
-      }
+  login: (token, userId, accountId) => {
+    set((state) => {
+      const newState = {
+        ...state,
+        token,
+        userId,
+        accountId,
+        isAuthenticated: true
+      };
+      logState(newState);
+      return newState;
+    });
+  },
 
-      const newIsAuthenticated = !!token;
+  clearAuth: () => {
+    set((state) => {
+      const newState = {
+        ...state,
+        token: null,
+        userId: null,
+        accountId: null,
+        isAuthenticated: false
+      };
+      logState(newState);
+      return newState;
+    });
+  },
 
-      if (newIsAuthenticated !== get().isAuthenticated) {
-        set({ isAuthenticated: newIsAuthenticated,
-          token: token
-        });
-      }
-      
-      return newIsAuthenticated;
-
-    } catch (error) {
-    console.error('Error checking auth state:', error);
-      return false;
-    }
+  getToken: () => {
+    const state = get();
+    console.log('Getting token:', state.token);
+    return state.token;
   }
 }));
 

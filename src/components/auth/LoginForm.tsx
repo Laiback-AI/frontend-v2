@@ -45,8 +45,8 @@ const LoginForm = () => {
                 };
 
                 // Update auth store
-                login(response.token, user);
-                
+                login(response.token, response.user_id, response.account_id);
+
                 console.log('Authentication successful, redirecting...');
                 router.replace('/projects');
             }
