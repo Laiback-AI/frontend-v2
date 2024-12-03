@@ -85,3 +85,4 @@ coverage
 .yaml
 .DS_Store
 >>>>>>> 103c75be28a9b1efb3a244d8dc1779f4f6722e14
+.env

@@ -14,15 +14,15 @@ import {
     TableRow,
     TableCell,
     Link,
-    User
-} from "@nextui-org/react";
-import { useState } from "react";
+    User,
+} from '@nextui-org/react';
+import { useState } from 'react';
 
 interface Project {
     id: number;
     title: string;
     description: string;
-    status: "active" | "completed" | "on-hold";
+    status: 'active' | 'completed' | 'on-hold';
     owner: string;
     progress: number;
     deadline: string;
@@ -31,37 +31,37 @@ interface Project {
 const dummyProjects: Project[] = [
     {
         id: 1,
-        title: "Website Redesign",
-        description: "Complete overhaul of company website",
-        status: "active",
-        owner: "John Doe",
+        title: 'Website Redesign',
+        description: 'Complete overhaul of company website',
+        status: 'active',
+        owner: 'John Doe',
         progress: 75,
-        deadline: "2024-06-30"
+        deadline: '2024-06-30',
     },
     {
         id: 2,
-        title: "Mobile App Development",
-        description: "New mobile application for clients",
-        status: "on-hold",
-        owner: "Jane Smith",
+        title: 'Mobile App Development',
+        description: 'New mobile application for clients',
+        status: 'on-hold',
+        owner: 'Jane Smith',
         progress: 30,
-        deadline: "2024-08-15"
+        deadline: '2024-08-15',
     },
     {
         id: 3,
-        title: "Database Migration",
-        description: "Migrate from MySQL to PostgreSQL",
-        status: "completed",
-        owner: "Bob Wilson",
+        title: 'Database Migration',
+        description: 'Migrate from MySQL to PostgreSQL',
+        status: 'completed',
+        owner: 'Bob Wilson',
         progress: 100,
-        deadline: "2024-05-01"
-    }
+        deadline: '2024-05-01',
+    },
 ];
 
 const statusColorMap = {
-    active: "success",
-    completed: "primary",
-    "on-hold": "warning"
+    active: 'success',
+    completed: 'primary',
+    'on-hold': 'warning',
 };
 
 export default function ProjectsPage() {
@@ -72,9 +72,7 @@ export default function ProjectsPage() {
             <div className="flex justify-between items-center mb-6">
                 <h1 className="text-2xl font-bold">Projects</h1>
                 <Link href="/createbatch">
-                    <Button color="primary">
-                        New Project
-                    </Button>
+                    <Button color="primary">New Project</Button>
                 </Link>
             </div>
 
@@ -93,13 +91,21 @@ export default function ProjectsPage() {
                             <TableRow key={project.id}>
                                 <TableCell>
                                     <div>
-                                        <p className="font-medium">{project.title}</p>
-                                        <p className="text-small text-default-500">{project.description}</p>
+                                        <p className="font-medium">
+                                            {project.title}
+                                        </p>
+                                        <p className="text-small text-default-500">
+                                            {project.description}
+                                        </p>
                                     </div>
                                 </TableCell>
                                 <TableCell>
                                     <Chip
-                                        color={statusColorMap[project.status] as any}
+                                        color={
+                                            statusColorMap[
+                                                project.status
+                                            ] as any
+                                        }
                                         size="sm"
                                         variant="flat"
                                     >
@@ -110,7 +116,7 @@ export default function ProjectsPage() {
                                     <User
                                         name={project.owner}
                                         avatarProps={{
-                                            src: `https://i.pravatar.cc/150?u=${project.owner}`
+                                            src: `https://i.pravatar.cc/150?u=${project.owner}`,
                                         }}
                                     />
                                 </TableCell>
@@ -118,8 +124,16 @@ export default function ProjectsPage() {
                                 <TableCell>{project.deadline}</TableCell>
                                 <TableCell>
                                     <div className="flex gap-2">
-                                        <Button size="sm" variant="bordered">Edit</Button>
-                                        <Button size="sm" color="danger" variant="flat">Delete</Button>
+                                        <Button size="sm" variant="bordered">
+                                            Edit
+                                        </Button>
+                                        <Button
+                                            size="sm"
+                                            color="danger"
+                                            variant="flat"
+                                        >
+                                            Delete
+                                        </Button>
                                     </div>
                                 </TableCell>
                             </TableRow>
@@ -127,6 +141,6 @@ export default function ProjectsPage() {
                     </TableBody>
                 </Table>
             </div>
-        </div >
+        </div>
     );
 }

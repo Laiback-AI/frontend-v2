@@ -1,38 +1,38 @@
 /* Import Tailwind base styles */
-@tailwind base; 
+@tailwind base;
 
 /* Import Tailwind component styles */
-@tailwind components; 
+@tailwind components;
 
 /* Import Tailwind utility classes */
 @tailwind utilities;
 
 @layer base {
-  :root {
-    /* These variables will be available globally */
-    --page-padding: 1rem;
-    --max-width: 1200px;
-    
-    /* Add semantic color CSS variables for easier access */
-    --primary-color: theme('colors.primary.DEFAULT');
-    --secondary-color: theme('colors.secondary.DEFAULT');
-  }
+    :root {
+        /* These variables will be available globally */
+        --page-padding: 1rem;
+        --max-width: 1200px;
 
-  /* Add dark mode overrides */
-  .dark {
-    --primary-color: theme('colors.primary.400');
-    --secondary-color: theme('colors.secondary.400');
-  }
+        /* Add semantic color CSS variables for easier access */
+        --primary-color: theme('colors.primary.DEFAULT');
+        --secondary-color: theme('colors.secondary.DEFAULT');
+    }
+
+    /* Add dark mode overrides */
+    .dark {
+        --primary-color: theme('colors.primary.400');
+        --secondary-color: theme('colors.secondary.400');
+    }
 }
 
 /* Custom utility classes */
 @layer utilities {
-  .page-container {
-    @apply max-w-[var(--max-width)] mx-auto px-[var(--page-padding)];
-  }
+    .page-container {
+        @apply max-w-[var(--max-width)] mx-auto px-[var(--page-padding)];
+    }
 }
 
 /* Global styles */
 body {
-  @apply min-h-screen text-foreground bg-background antialiased;
+    @apply min-h-screen text-foreground bg-background antialiased;
 }

@@ -1,0 +1,18 @@
+# Node modules
+node_modules/
+**/node_modules/
+
+# Build directories
+dist/
+build/
+
+# PDF worker and other generated files
+public/pdf.worker.min.js
+public/*.min.js
+
+# Next.js build output
+.next/
+out/
+
+# TypeScript declaration files
+*.d.ts 

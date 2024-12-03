@@ -1,8 +1,16 @@
 'use client';
 
 import { useState } from 'react';
-import { Card, CardBody, CardHeader, Button, Input, Textarea, Divider } from "@nextui-org/react";
-import { Pagination } from "@nextui-org/pagination";
+import {
+    Card,
+    CardBody,
+    CardHeader,
+    Button,
+    Input,
+    Textarea,
+    Divider,
+} from '@nextui-org/react';
+import { Pagination } from '@nextui-org/pagination';
 import { useRouter } from 'next/navigation';
 import { QuestionService } from '../../services/flow/generateQuestionsService';
 
@@ -10,7 +18,9 @@ export default function FlowPage() {
     const router = useRouter();
     const [currentStep, setCurrentStep] = useState(1);
     const [projectDescription, setProjectDescription] = useState('');
-    const [questions, setQuestions] = useState<Array<{ id: number; text: string }>>([]);
+    const [questions, setQuestions] = useState<
+        Array<{ id: number; text: string }>
+    >([]);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [settings, setSettings] = useState({});
@@ -24,12 +34,19 @@ export default function FlowPage() {
                 console.log('Generating questions...');
                 const questionService = new QuestionService();
                 console.log('Project description:', projectDescription);
-                const generatedQuestions = await questionService.getGeneratedQuestions(projectDescription);
+                const generatedQuestions =
+                    await questionService.getGeneratedQuestions(
+                        projectDescription
+                    );
                 console.log('Generated questions:', generatedQuestions);
                 setQuestions(generatedQuestions);
                 setCurrentStep(step);
             } catch (err) {
-                setError(err instanceof Error ? err.message : 'Failed to generate questions');
+                setError(
+                    err instanceof Error
+                        ? err.message
+                        : 'Failed to generate questions'
+                );
                 return;
             } finally {
                 setIsLoading(false);
@@ -48,12 +65,16 @@ export default function FlowPage() {
             case 1:
                 return (
                     <div className="flex flex-col gap-4 min-h-[400px]">
-                        <h2 className="text-xl font-semibold">Step 1: Project Description</h2>
+                        <h2 className="text-xl font-semibold">
+                            Step 1: Project Description
+                        </h2>
                         <Textarea
                             label="Project Description"
                             placeholder="Enter your project description"
                             value={projectDescription}
-                            onChange={(e) => setProjectDescription(e.target.value)}
+                            onChange={(e) =>
+                                setProjectDescription(e.target.value)
+                            }
                             className="flex-grow"
                             minRows={10}
                             maxRows={10}
@@ -64,7 +85,9 @@ export default function FlowPage() {
                                 color="primary"
                                 onPress={() => handleStepChange(2)}
                                 isLoading={isLoading}
-                                isDisabled={!projectDescription.trim() || isLoading}
+                                isDisabled={
+                                    !projectDescription.trim() || isLoading
+                                }
                             >
                                 {isLoading ? 'Generating Questions...' : 'Next'}
                             </Button>
@@ -74,7 +97,9 @@ export default function FlowPage() {
             case 2:
                 return (
                     <div className="flex flex-col gap-4 min-h-[400px]">
-                        <h2 className="text-xl font-semibold">Step 2: Questions</h2>
+                        <h2 className="text-xl font-semibold">
+                            Step 2: Questions
+                        </h2>
                         {error && (
                             <div className="text-red-500 p-3 rounded bg-red-100">
                                 {error}
@@ -112,7 +137,9 @@ export default function FlowPage() {
             case 3:
                 return (
                     <div className="flex flex-col gap-4 min-h-[400px]">
-                        <h2 className="text-xl font-semibold">Step 3: Settings</h2>
+                        <h2 className="text-xl font-semibold">
+                            Step 3: Settings
+                        </h2>
                         <div className="flex-grow">
                             {/* Settings form would go here */}
                         </div>
@@ -137,7 +164,6 @@ export default function FlowPage() {
 
     return (
         <div className="flex justify-center items-center min-h-screen p-6">
-
             <Card className="w-full max-w-3xl h-[600px]">
                 <CardHeader className="flex flex-col gap-4 py-4">
                     <Button
@@ -146,8 +172,19 @@ export default function FlowPage() {
                         onPress={handleBackToProjects}
                         className="text-sm"
                         startContent={
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                <path d="M15 18l-6-6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                            <svg
+                                width="24"
+                                height="24"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                            >
+                                <path
+                                    d="M15 18l-6-6 6-6"
+                                    stroke="currentColor"
+                                    strokeWidth="2"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                />
                             </svg>
                         }
                     >
@@ -163,9 +200,7 @@ export default function FlowPage() {
                     />
                 </CardHeader>
                 <Divider />
-                <CardBody className="p-6">
-                    {renderStepContent()}
-                </CardBody>
+                <CardBody className="p-6">{renderStepContent()}</CardBody>
             </Card>
         </div>
     );
