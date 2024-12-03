@@ -1,14 +1,22 @@
-# Fastender
+# Project Structure
 
-This project is a web app built with Next.js, Zustand for state management, and NextUI for UI components.
+This project follows a modular, domain-driven architecture.
 
-## Installation
+## Folders
 
-1. Clone the repository.
-2. Install dependencies: `pnpm install`
-3. Start the development server: `pnpm dev`
+### Root
+- **`src/`**: Contains all source code for the project.
 
-## Features
+### Key Directories
+- `features/`: Domain-specific logic, encapsulating API calls, components, stores, and services.
+  - `auth/`: Authentication logic.
+  - `flow/`: Workflow-related functionality.
+  - `projects/`: Project management features.
 
-- User authentication using mock APIs.
-- Tender management page that displays tenders for logged-in users.
+- `state/`: Global Zustand stores for theme and other shared state management.
+- `ui/`: Shared reusable UI components.
+- `api/`: Global API configurations and clients.
+- `styles/`: Global styles and theming.
+
+### Tests
+- `__tests__/`: Organized testing for APIs, components, and services.
