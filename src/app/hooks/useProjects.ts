@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react';
-import {
-    Project,
-    ProjectService,
-} from '../../features/projects/services/projectsService';
+// import {
+//     Project,
+//     ProjectService,
+// } from '../../features/projects/services/projectsService';
 import { useAuth } from './useAuth';
 
 export function useProjects() {
-    const [projects, setProjects] = useState<Project[]>([]);
+    // const [projects, setProjects] = useState<Project[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const { token } = useAuth();
@@ -22,20 +22,20 @@ export function useProjects() {
             return;
         }
 
-        try {
-            setLoading(true);
-            const projectService = new ProjectService(token);
-            const fetchedProjects = await projectService.getProjects();
-            setProjects(fetchedProjects);
-            setError(null);
-        } catch (err) {
-            setError(
-                err instanceof Error ? err.message : 'Failed to fetch projects'
-            );
-        } finally {
-            setLoading(false);
-        }
+    //     try {
+    //         setLoading(true);
+    //         const projectService = new ProjectService(token);
+    //         const fetchedProjects = await projectService.getProjects();
+    //         setProjects(fetchedProjects);
+    //         setError(null);
+    //     } catch (err) {
+    //         setError(
+    //             err instanceof Error ? err.message : 'Failed to fetch projects'
+    //         );
+    //     } finally {
+    //         setLoading(false);
+    //     }
     };
 
-    return { projects, loading, error, refetch: fetchProjects };
+    // return { projects, loading, error, refetch: fetchProjects };
 }

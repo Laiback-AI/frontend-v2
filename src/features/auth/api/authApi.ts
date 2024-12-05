@@ -1,136 +1,59 @@
-import axios, { AxiosResponse } from 'axios';
+import axios from 'axios';
 import { AuthResponse, LoginRequest, SignUpRequest } from '../types/authTypes';
-import { API_BASE_URL } from '../../../config';
-import { useCookieStore } from '../stores/cookiesStore';
-import { withCsrfToken } from '../services/cookiesService';
-import { useSessionStore } from '../stores/sessionStore';
-import { setCookie } from './cookies';
+import { getHeaders } from '../../shared/api/headers';
 
-const API_URL = `${API_BASE_URL}/api/v1/auth`;
+// Base URL for authentication endpoints
+const API_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:3000';
 
 /**
- * Gets common headers for API calls, including CSRF token if available.
- * @returns Object containing headers
+ * API layer for authentication-related network requests.
+ * This layer is responsible only for making HTTP requests to the backend.
  */
-const getHeaders = () => {
-    const { csrfToken } = useCookieStore.getState();
-    return {
-        'Content-Type': 'application/json',
-        Accept: 'application/json',
-        ...(csrfToken && { 'X-CSRFToken': csrfToken }), // Add CSRF token if available
-    };
-};
+export const authApi = {
+    /**
+     * Makes a POST request to login endpoint.
+     * @param credentials - User login credentials (email and password)
+     * @returns Promise containing the authentication response from the server
+     */
+    login: async (credentials: LoginRequest): Promise<AuthResponse> => {
+        const response = await fetch(`${API_URL}/login`, {
+            method: 'POST',
+            headers: getHeaders(),
+            body: JSON.stringify(credentials),
+            credentials: 'include',
+        });
+        return response.json();
+    },
 
-/**
- * Logs in a user using provided credentials.
- * @param credentials LoginRequest
- * @returns Promise<AuthResponse>
- */
-export const loginUserApi = async (
-    credentials: LoginRequest
-): Promise<AuthResponse> => {
-    return withCsrfToken(async () => {
-        try {
-            const headers = getHeaders();
-            const response = await fetch(`${API_URL}/login/`, {
-                method: 'POST',
-                headers: headers,
-                body: JSON.stringify(credentials),
-                credentials: 'include',
-            });
-
-            if (!response.ok) {
-                throw new Error('Login failed');
-            }
-
-            const data: AuthResponse = await response.json();
-            const { token: sessionToken, user_id } = data;
-
-            // Store session token and userId in cookies
-            setCookie('sessionToken', sessionToken);
-            setCookie('userId', user_id.toString());
-
-            // Update Zustand stores
-            useSessionStore.getState().setSessionToken(sessionToken);
-            useSessionStore.getState().setUserId(user_id);
-
-            return data;
-        } catch (error) {
-            console.error('Login API Error:', error);
-            throw error;
-        }
-    });
-};
-
-/**
- * Signs up a user using provided user data.
- * @param userData SignUpRequest
- * @returns Promise<AuthResponse>
- */
-export const signUpUserApi = async (
-    userData: SignUpRequest
-): Promise<AuthResponse> => {
-    return withCsrfToken(async () => {
-        try {
-            const response: AxiosResponse<AuthResponse> = await axios.post(
-                `${API_URL}/signup/`,
-                {
-                    email: userData.email,
-                    password: userData.password,
-                    account_name: userData.account_name,
-                    name: userData.name,
-                    surname: userData.surname,
-                    is_admin: userData.is_admin ?? true, // Default to true if not provided
-                },
-                {
-                    headers: getHeaders(),
-                    withCredentials: true, // Include cookies in Axios request
-                }
-            );
-
-            // Save session token and userId to Zustand
-            const { token: sessionToken, user_id } = response.data;
-            useCookieStore.getState().setSessionToken(sessionToken);
-            useCookieStore.getState().setUserId(user_id);
-
-            return response.data;
-        } catch (error: any) {
-            console.error('SignUp API Error:', {
-                error: error,
-                message: error.message,
-                status: error.response?.status,
-                data: error.response?.data,
-                headers: error.response?.headers,
-            });
-            throw error;
-        }
-    });
-};
-
-/**
- * Logs out a user by clearing session cookies and Zustand state.
- */
-export const logoutUserApi = async (): Promise<void> => {
-    try {
-        const headers = getHeaders();
-        await axios.post(
-            `${API_URL}/logout/`,
-            {},
+    /**
+     * Makes a POST request to signup endpoint.
+     * @param userData - User registration data including email, password, and profile info
+     * @returns Promise containing the authentication response from the server
+     */
+    signUp: async (userData: SignUpRequest): Promise<AuthResponse> => {
+        const response = await axios.post(
+            `${API_URL}/signup`,
+            userData,
             {
-                headers: headers,
-                withCredentials: true, // Include cookies
+                headers: getHeaders(),
+                withCredentials: true,
             }
         );
+        return response.data;
+    },
 
-        // Clear Zustand state and cookies
-        useCookieStore.getState().clearSession();
-    } catch (error: any) {
-        console.error('Logout API Error:', {
-            error: error,
-            message: error.message,
-            status: error.response?.status,
-            data: error.response?.data,
-        });
-        throw error;
+    /**
+     * Makes a POST request to logout endpoint.
+     * @returns Promise that resolves when logout is complete
+     */
+    logout: async (): Promise<void> => {
+        await axios.post(
+            `${API_URL}/logout`,
+            {},
+            {
+                headers: getHeaders(),
+                withCredentials: true,
+            }
+        );
     }
 };

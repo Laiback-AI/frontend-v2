@@ -1,17 +1,10 @@
 import axios from 'axios';
-import { API_BASE_URL } from '../../config';
-import { useCookieStore } from '@/state/stores/cookies';
+import { getHeaders } from '@/features/shared/api/headers';
 
-const getHeaders = () => {
-    const { csrfToken } = useCookieStore.getState();
-    return {
-        'Content-Type': 'application/json',
-        Accept: 'application/json',
-        ...(csrfToken && { 'X-CSRFToken': csrfToken }),
-    };
-};
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:3000';
 
 const API_URL = `${API_BASE_URL}/api/v1/jira`;
+
 
 export const sendJiraBatch = async (
     projectId: string,

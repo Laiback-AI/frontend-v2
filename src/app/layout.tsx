@@ -19,28 +19,27 @@ export default function RootLayout({
     children: React.ReactNode;
 }) {
     // Get session management functions from Zustand store
-    const setAuthenticated = useSessionStore((state) => state.setAuthenticated);
-    const setUser = useSessionStore((state) => state.setUser);
+    const login = useSessionStore((state) => state.login);
 
     // Initialize app and check authentication status on mount
     useEffect(() => {
         const initializeApp = async () => {
             try {
                 // Set up CSRF protection
+                console.log('Initializing CSRF protection before call');
                 await initializeCsrf();
                 console.log('App initialized with CSRF token');
 
                 // Check for existing user session in cookies or localStorage
                 const userId = getCookie('userId') || localStorage.getItem('userId');
                 if (userId) {
-                    setUser({
+                    login('sessionToken', { // Replace 'sessionToken' with actual token if available
                         id: parseInt(userId, 10),
                         email: '',           // Add placeholder values or
                         name: '',           // fetch these from storage/API
                         surname: '',        // if available
                         account_name: ''
                     });
-                    setAuthenticated(true);
                     console.log('User authenticated:', { userId });
                 } else {
                     console.log('No authenticated user found.');
@@ -51,7 +50,7 @@ export default function RootLayout({
         };
 
         initializeApp();
-    }, [setAuthenticated, setUser]); // Re-run if session management functions change
+    }, [login]); // Re-run if session management functions change
 
     // Render app with necessary providers and layout structure
     return (

@@ -1,25 +1,16 @@
-import { API_BASE_URL } from '../../config';
-import { useCookieStore } from '@/state/stores/cookies';
-import { useAuthStore } from '@/state/stores/authStore';
+import { getHeaders } from '../../shared/api/headers';  
 
-const getHeaders = () => {
-    const { csrfToken } = useCookieStore.getState();
-    const token = useAuthStore.getState().getToken();
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:3000';
 
-    const headers: Record<string, string> = {
-        'Content-Type': 'application/json',
-        Accept: 'application/json',
-        'X-Requested-With': 'XMLHttpRequest',
-    };
-
-    if (csrfToken) headers['X-CSRF-TOKEN'] = csrfToken;
-    if (token) headers['Authorization'] = `Bearer ${token}`;
-
-    return headers;
-};
 
 const API_URL = `${API_BASE_URL}/api/v1/backlog`;
 
+/**
+ * Generate project questions based on user explanation and optional concept
+ * @param userExplanation - User's project description
+ * @param concept - Optional concept to guide question generation
+ * @returns Generated questions and related data
+ */
 export const generateProjectQuestions = async (
     userExplanation: string,
     concept?: string

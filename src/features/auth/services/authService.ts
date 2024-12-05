@@ -1,82 +1,117 @@
-import { loginUserApi, signUpUserApi } from '../api/authApi';
-import {
-    AuthResponse,
-    LoginRequest,
-    SignUpRequest,
-} from '../types/authTypes';
-import { useAuthStore } from '../../../state/stores/auth/authStore';
-import { withCsrfToken } from './cookiesService';
-import { deleteCookie } from '../api/cookies';
+import { authApi } from '../api/authApi';
+import { AuthResponse, LoginRequest, SignUpRequest } from '../types/authTypes';
+import { useCookieStore } from '../stores/cookiesStore';
 import { useSessionStore } from '../stores/sessionStore';
+import { setCookie } from '../api/cookies';
+import { withCsrfToken } from './cookiesService';
 
-export const loginUser = async (
-    credentials: LoginRequest
-): Promise<AuthResponse> => {
-    try {
-        const response = await loginUserApi(credentials);
-        console.log('Login API response:', response);
+/**
+ * Service layer for authentication-related business logic.
+ * Handles state management, error handling, and data transformation.
+ */
+export const authService = {
+    /**
+     * Handles user login process including:
+     * - CSRF token validation
+     * - API call
+     * - Session storage in cookies
+     * - State management in Zustand
+     * - Error handling
+     * 
+     * @param credentials - User login credentials
+     * @returns Promise containing the authentication response
+     * @throws Error with login failure message
+     */
+    login: async (credentials: LoginRequest): Promise<AuthResponse> => {
+        return withCsrfToken(async () => {
+            try {
+                const data = await authApi.login(credentials);
+                const { token: sessionToken, user_id, email, name, surname, account_name } = data;
 
-        if (response && response.token) {
-            useAuthStore.getState().setAuthData({
-                token: response.token,
-                user_id: response.user_id,
-                account_id: response.account_id,
-            });
+                // Store session data in cookies for persistence
+                setCookie('sessionToken', sessionToken);
+                setCookie('userId', user_id.toString());
 
-            // Verify token was saved
-            const savedToken = useAuthStore.getState().getToken();
-            console.log('Verified saved token:', savedToken);
-        }
-
-        return response;
-    } catch (error) {
-        console.error('Login error:', error);
-        throw error;
-    }
-};
-
-export const signUpUser = async (
-    userData: SignUpRequest
-): Promise<AuthResponse> => {
-    return withCsrfToken(async () => {
-        try {
-            const response = await signUpUserApi(userData);
-
-            if (response && response.token) {
-                // Save auth data to Zustand
-                useAuthStore.getState().setAuthData({
-                    token: response.token,
-                    user_id: response.user_id,
-                    account_id: response.account_id,
+                // Update application state using the correct method names
+                useSessionStore.getState().login(sessionToken, {
+                    id: user_id,
+                    email,
+                    name,
+                    surname,
+                    account_name
                 });
 
-                return response;
+                return data;
+            } catch (error) {
+                console.error('Login Error:', error);
+                throw new Error('Login failed');
             }
+        });
+    },
 
-            throw new Error('Invalid response from server');
-        } catch (error) {
-            throw new Error('Sign-up failed');
+    /**
+     * Handles user registration process including:
+     * - CSRF token validation
+     * - API call
+     * - Session storage in cookies
+     * - State management in Zustand
+     * - Error handling with detailed logging
+     * 
+     * @param userData - User registration data
+     * @returns Promise containing the authentication response
+     * @throws Error with registration failure message
+     */
+    signUp: async (userData: SignUpRequest): Promise<AuthResponse> => {
+        return withCsrfToken(async () => {
+            try {
+                const data = await authApi.signUp(userData);
+                const { token: sessionToken, user_id, email, name, surname, account_name } = data;
+
+                // Update application state using the correct method names
+                useSessionStore.getState().login(sessionToken, {
+                    id: user_id,
+                    email,
+                    name,
+                    surname,
+                    account_name
+                });
+
+                return data;
+            } catch (error: any) {
+                console.error('SignUp Error:', {
+                    error,
+                    message: error.message,
+                    status: error.response?.status,
+                    data: error.response?.data,
+                });
+                throw new Error('Registration failed');
+            }
+        });
+    },
+
+    /**
+     * Handles user logout process including:
+     * - API call to backend
+     * - Clearing session data from cookies
+     * - Clearing application state
+     * - Error handling with detailed logging
+     * 
+     * @throws Error with logout failure message
+     */
+    logout: async (): Promise<void> => {
+        try {
+            await authApi.logout();
+            // Clear all session data using the correct method names
+            useSessionStore.getState().logout();
+            useCookieStore.getState().clearSession();
+        } catch (error: any) {
+            console.error('Logout Error:', {
+                error,
+                message: error.message,
+                status: error.response?.status,
+                data: error.response?.data,
+            });
+            throw new Error('Logout failed');
         }
-    });
-};
-
-export const logoutUser = () => {
-    // Clear cookies
-    deleteCookie('sessionToken');
-    deleteCookie('userId');
-
-    // Clear Zustand state
-    useSessionStore.getState().logout();
-    console.log('User logged out, auth data cleared');
-};
-
-// Helper functions
-export const getAuthData = () => {
-    const { token, userId, accountId } = useAuthStore.getState();
-    return { token, userId, accountId };
-};
-
-export const isAuthenticated = () => {
-    const { token } = useAuthStore.getState();
-    return !!token;
+    }
 };

@@ -7,16 +7,19 @@ import {
     Spacer,
     Card,
     CardBody,
-    Text,
+    Textarea,
     Divider,
 } from '@nextui-org/react';
-import { useAuthStore } from '../../state/stores/authStore';
 import { useRouter } from 'next/navigation';
-import { signUpUser } from '../../services/auth/authService';
+import { authService } from '../services/authService';
 
-export default function SignUpForm() {
+interface SignUpFormProps {
+    onSubmit: (email: string, password: string) => Promise<void>;
+    loading: boolean;
+}
+
+export default function SignUpForm({ onSubmit, loading }: SignUpFormProps) {
     const router = useRouter();
-    const login = useAuthStore((state) => state.login);
 
     const [formData, setFormData] = useState({
         email: '',
@@ -24,6 +27,7 @@ export default function SignUpForm() {
         name: '',
         surname: '',
         account_name: '',
+        is_admin: true,
     });
 
     const [error, setError] = useState<string | null>(null);
@@ -44,19 +48,8 @@ export default function SignUpForm() {
         setIsLoading(true);
 
         try {
-            const response = await signUpUser({
-                ...formData,
-                is_admin: true,
-            });
-
-            // Store user data in Zustand
-            login(response.token, {
-                id: response.user_id,
-                email: formData.email,
-                name: formData.name,
-                surname: formData.surname,
-                account_name: formData.account_name,
-            });
+            const response = await authService.signUp(formData);
+            console.log('Sign-up successful:', response);
 
             // Redirect on success
             router.push('/main');
@@ -71,9 +64,9 @@ export default function SignUpForm() {
     return (
         <Card className="w-full max-w-md mx-auto">
             <CardBody className="flex flex-col gap-4">
-                <Text h3 className="text-center">
+                <h3 className="text-center text-xl font-bold">
                     Create Your Account
-                </Text>
+                </h3>
 
                 <Divider />
 
@@ -135,9 +128,12 @@ export default function SignUpForm() {
 
                 {/* Error Message */}
                 {error && (
-                    <Text color="danger" className="text-center">
-                        {error}
-                    </Text>
+                    <Textarea 
+                        color="danger" 
+                        className="text-center"
+                        readOnly
+                        value={error}
+                    />
                 )}
 
                 <Spacer y={1} />

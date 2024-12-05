@@ -1,8 +1,8 @@
 // questionService.ts
 
 import axios from 'axios';
-import { generateProjectQuestions } from '../../api/flow/generateQuestions';
-import { withCsrfToken } from '../auth/cookiesService';
+import { generateProjectQuestions } from '../../flow/api/generateQuestions';
+import { withCsrfToken } from '../../auth/services/cookiesService';
 
 // Define the structure of a question (adjust fields as necessary)
 interface Question {

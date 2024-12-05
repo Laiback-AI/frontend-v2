@@ -1,5 +1,5 @@
 // CREATE NEW FILE: src/api/projects.api.ts
-import { API_BASE_URL } from '../../config/index';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:3000';
 
 /**
  * API response types
