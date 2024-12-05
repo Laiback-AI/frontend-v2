@@ -1,4 +1,4 @@
-import { setCookie, getCookie } from '../../features/auth/api/cookies';
+import { setCookie, getCookie } from '../api/cookies';
 
 export async function initializeCsrf() {
     // Fetch CSRF token from the server

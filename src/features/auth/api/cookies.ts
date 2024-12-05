@@ -6,7 +6,7 @@ export function setCookie(name: string, value: string, options = {}) {
     path: '/',
     secure: true,
     httpOnly: false,
-    sameSite: 'strict',
+    sameSite: 'strict' as const,
     ...options,
   };
   document.cookie = serialize(name, value, defaultOptions);

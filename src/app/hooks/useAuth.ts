@@ -1,6 +1,8 @@
-import useSessionStore from '../../state/stores/sessionStore';
+import useSessionStore from '../../features/auth/stores/sessionStore';
+import { getCookie } from '../../features/auth/api/cookies';
 
 export function useAuth() {
-  const { userId, isAuthenticated, logout } = useSessionStore();
-  return { userId, isAuthenticated, logout };
+    const { user, isAuthenticated, logout } = useSessionStore();
+    const token = getCookie('sessionToken');
+    return { userId: user?.id, isAuthenticated, logout, token };
 }

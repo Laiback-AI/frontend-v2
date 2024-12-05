@@ -2,8 +2,8 @@ import { useState, useEffect } from 'react';
 import {
     Project,
     ProjectService,
-} from '../../services/projects/project.service';
-import { useAuth } from '../hooks/useAuth';
+} from '../../features/projects/services/projectsService';
+import { useAuth } from './useAuth';
 
 export function useProjects() {
     const [projects, setProjects] = useState<Project[]>([]);

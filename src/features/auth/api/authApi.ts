@@ -1,10 +1,10 @@
 import axios, { AxiosResponse } from 'axios';
-import { AuthResponse, LoginRequest, SignUpRequest } from '../../types/authTypes';
-import { API_BASE_URL } from '../../config';
-import { useCookieStore } from '../../state/stores/cookies';
-import { withCsrfToken } from '../../services/auth/cookiesService';
-import { useSessionStore } from '../../state/stores/sessionStore';
-import { setCookie } from '../../features/auth/api/cookies';
+import { AuthResponse, LoginRequest, SignUpRequest } from '../types/authTypes';
+import { API_BASE_URL } from '../../../config';
+import { useCookieStore } from '../stores/cookiesStore';
+import { withCsrfToken } from '../services/cookiesService';
+import { useSessionStore } from '../stores/sessionStore';
+import { setCookie } from './cookies';
 
 const API_URL = `${API_BASE_URL}/api/v1/auth`;
 
@@ -44,15 +44,15 @@ export const loginUserApi = async (
             }
 
             const data: AuthResponse = await response.json();
-            const { sessionToken, userId } = data;
+            const { token: sessionToken, user_id } = data;
 
             // Store session token and userId in cookies
             setCookie('sessionToken', sessionToken);
-            setCookie('userId', userId);
+            setCookie('userId', user_id.toString());
 
             // Update Zustand stores
             useSessionStore.getState().setSessionToken(sessionToken);
-            useSessionStore.getState().setUserId(userId);
+            useSessionStore.getState().setUserId(user_id);
 
             return data;
         } catch (error) {
@@ -89,9 +89,9 @@ export const signUpUserApi = async (
             );
 
             // Save session token and userId to Zustand
-            const { sessionToken, userId } = response.data;
+            const { token: sessionToken, user_id } = response.data;
             useCookieStore.getState().setSessionToken(sessionToken);
-            useCookieStore.getState().setUserId(userId);
+            useCookieStore.getState().setUserId(user_id);
 
             return response.data;
         } catch (error: any) {

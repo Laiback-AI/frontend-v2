@@ -1,27 +1,27 @@
-import create from 'zustand';
+import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import { User } from '../types/authTypes';
 
-type SessionState = {
-  userId: string | null;
+// For Zustand: Managing UI state and user data
+interface SessionState {
+  user: User | null;
   isAuthenticated: boolean;
-  sessionToken: string | null;
-  setUserId: (id: string) => void;
-  setSessionToken: (token: string) => void;
+  setUser: (user: User) => void;
+  setAuthenticated: (value: boolean) => void;
   logout: () => void;
-};
+}
 
-const useSessionStore = create<SessionState>(
+const useSessionStore = create<SessionState>()(
   persist(
     (set) => ({
-      userId: null,
+      user: null,
       isAuthenticated: false,
-      sessionToken: null,
-      setUserId: (id: string) => set({ userId: id, isAuthenticated: true }),
-      setSessionToken: (token: string) => set({ sessionToken: token }),
-      logout: () => set({ userId: null, isAuthenticated: false, sessionToken: null }),
+      setUser: (user) => set({ user, isAuthenticated: true }),
+      setAuthenticated: (value) => set({ isAuthenticated: value }),
+      logout: () => set({ user: null, isAuthenticated: false }),
     }),
     {
-      name: 'session-storage', // name of the item in the storage (must be unique)
+      name: 'session-storage',
     }
   )
 );

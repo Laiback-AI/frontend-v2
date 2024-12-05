@@ -1,33 +1,45 @@
-'use client';
+'use client'; // Enable client-side features
 
+// Import styles and UI providers
 import '../styles/global.css';
 import { NextUIProvider } from '@nextui-org/react';
 import { ThemeProvider as NextThemesProvider } from 'next-themes';
 import { useEffect } from 'react';
-import { initializeCsrf } from '../services/auth/cookiesService';
-import Header from '../components/common/Header';
-import { useAuthStore } from '../state/stores/authStore';
-import { getCookie } from '../api/auth/cookies';
 
+// Import authentication and UI components
+import { initializeCsrf } from '../features/auth/services/cookiesService';
+import Header from '../ui/common/Header';
+import useSessionStore from '../features/auth/stores/sessionStore';
+import { getCookie } from '../features/auth/api/cookies';
+
+// Root layout component that wraps the entire application
 export default function RootLayout({
     children,
 }: {
     children: React.ReactNode;
 }) {
-    const setAuthenticated = useAuthStore((state) => state.setAuthenticated);
-    const setUserId = useAuthStore((state) => state.setUserId);
+    // Get session management functions from Zustand store
+    const setAuthenticated = useSessionStore((state) => state.setAuthenticated);
+    const setUser = useSessionStore((state) => state.setUser);
 
+    // Initialize app and check authentication status on mount
     useEffect(() => {
         const initializeApp = async () => {
             try {
-                // Initialize CSRF token
+                // Set up CSRF protection
                 await initializeCsrf();
                 console.log('App initialized with CSRF token');
 
-                // Retrieve userId from cookies or localStorage
+                // Check for existing user session in cookies or localStorage
                 const userId = getCookie('userId') || localStorage.getItem('userId');
                 if (userId) {
-                    setUserId(userId);
+                    setUser({
+                        id: parseInt(userId, 10),
+                        email: '',           // Add placeholder values or
+                        name: '',           // fetch these from storage/API
+                        surname: '',        // if available
+                        account_name: ''
+                    });
                     setAuthenticated(true);
                     console.log('User authenticated:', { userId });
                 } else {
@@ -39,8 +51,9 @@ export default function RootLayout({
         };
 
         initializeApp();
-    }, [setAuthenticated, setUserId]);
+    }, [setAuthenticated, setUser]); // Re-run if session management functions change
 
+    // Render app with necessary providers and layout structure
     return (
         <html lang="en">
             <body>

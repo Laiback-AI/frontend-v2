@@ -12,7 +12,7 @@ import {
 } from '@nextui-org/react';
 import { Pagination } from '@nextui-org/pagination';
 import { useRouter } from 'next/navigation';
-import { QuestionService } from '../../services/flow/generateQuestionsService';
+import { QuestionService } from '../../features/flow/services/generateQuestionsService';
 
 export default function FlowPage() {
     const router = useRouter();

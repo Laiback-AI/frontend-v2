@@ -1,13 +1,13 @@
-import { loginUserApi, signUpUserApi } from '../../api/auth/auth';
+import { loginUserApi, signUpUserApi } from '../api/authApi';
 import {
     AuthResponse,
     LoginRequest,
     SignUpRequest,
-} from '../../types/authTypes';
-import { useAuthStore } from '../../state/stores/authStore';
+} from '../types/authTypes';
+import { useAuthStore } from '../../../state/stores/auth/authStore';
 import { withCsrfToken } from './cookiesService';
-import { deleteCookie } from '../../features/auth/api/cookies';
-import { useSessionStore } from '../../state/stores/sessionStore';
+import { deleteCookie } from '../api/cookies';
+import { useSessionStore } from '../stores/sessionStore';
 
 export const loginUser = async (
     credentials: LoginRequest
