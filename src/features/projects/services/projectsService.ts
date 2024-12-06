@@ -45,7 +45,7 @@
 //             const apiProjects = await fetchProjectsApi(this.token);
 //             return apiProjects.map(this.transformProject);
 //         } catch (error) {
-//             console.error('ProjectService - Error fetching projects:', error);
+//             //console.error('ProjectService - Error fetching projects:', error);
 //             throw error;
 //         }
 //     }

@@ -67,23 +67,23 @@
 
 //             if (axiosError.response) {
 //                 // Server responded with a status code out of the range of 2xx
-//                 console.error('Server Error:', axiosError.response.data);
+//                 //console.error('Server Error:', axiosError.response.data);
 //                 throw new Error(
 //                     (axiosError.response.data as ErrorResponse)?.error ||
 //                         'An error occurred while generating epics and tasks.'
 //                 );
 //             } else if (axiosError.request) {
 //                 // No response received
-//                 console.error('No response received:', axiosError.request);
+//                 //console.error('No response received:', axiosError.request);
 //                 throw new Error('No response received from the server.');
 //             } else {
 //                 // Error setting up the request
-//                 console.error('Request Error:', axiosError.message);
+//                 //console.error('Request Error:', axiosError.message);
 //                 throw new Error(axiosError.message);
 //             }
 //         } else {
 //             // Non-Axios errors
-//             console.error('Unexpected Error:', error);
+//             //console.error('Unexpected Error:', error);
 //             throw new Error('An unexpected error occurred.');
 //         }
 //     }

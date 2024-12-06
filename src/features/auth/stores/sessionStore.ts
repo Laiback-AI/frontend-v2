@@ -1,27 +1,27 @@
 import { create } from 'zustand';
-import { User } from '../types/authTypes';
 
-// For Zustand: Managing UI state and user data
-interface SessionState {
-  user: User | null;
-  isAuthenticated: boolean;
-  login: (token: string, user: User) => void;
-  logout: () => void;
+interface User {
+    id: number;
+    email: string;
+    name: string;
+    surname: string;
+    account_name: string;
 }
 
-export const useSessionStore = create<SessionState>((set) => ({
-  user: null,
-  isAuthenticated: false,
-  login: (token: string, user: User) => {
-    localStorage.setItem('sessionToken', token);
-    localStorage.setItem('userId', user.id.toString());
-    set({ user, isAuthenticated: true });
-  },
-  logout: () => {
-    localStorage.removeItem('sessionToken');
-    localStorage.removeItem('userId');
-    set({ user: null, isAuthenticated: false });
-  }
+interface SessionState {
+    token: string | null;
+    user: User | null;
+    isAuthenticated: boolean;
+    login: (token: string, user: User) => void;
+    logout: () => void;
+}
+
+const useSessionStore = create<SessionState>((set) => ({
+    token: null,
+    user: null,
+    isAuthenticated: false,
+    login: (token, user) => set({ token, user, isAuthenticated: true }),
+    logout: () => set({ token: null, user: null, isAuthenticated: false }),
 }));
 
 export default useSessionStore;

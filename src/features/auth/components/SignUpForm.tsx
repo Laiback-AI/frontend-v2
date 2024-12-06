@@ -128,8 +128,8 @@ export default function SignUpForm({ onSubmit, loading }: SignUpFormProps) {
 
                 {/* Error Message */}
                 {error && (
-                    <Textarea 
-                        color="danger" 
+                    <Textarea
+                        color="danger"
                         className="text-center"
                         readOnly
                         value={error}

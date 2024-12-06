@@ -1,70 +1,83 @@
-'use client'; // Enable client-side features
+'use client';
 
-// Import styles and UI providers
 import '../styles/global.css';
 import { NextUIProvider } from '@nextui-org/react';
 import { ThemeProvider as NextThemesProvider } from 'next-themes';
-import { useEffect } from 'react';
-
-// Import authentication and UI components
-import { initializeCsrf } from '../features/auth/services/cookiesService';
+import { useEffect, useState } from 'react';
 import Header from '../ui/common/Header';
+import { ErrorModal } from '../features/shared/components/ErrorModal';
+import { useErrorStore } from '../features/auth/api/authApi';
 import useSessionStore from '../features/auth/stores/sessionStore';
 import { getCookie } from '../features/auth/api/cookies';
 
-// Root layout component that wraps the entire application
 export default function RootLayout({
     children,
 }: {
     children: React.ReactNode;
 }) {
-    // Get session management functions from Zustand store
+    const { isOpen, error, hideError } = useErrorStore();
+    const [mounted, setMounted] = useState(false);
+    const isAuthenticated = useSessionStore((state) => state.isAuthenticated);
     const login = useSessionStore((state) => state.login);
 
-    // Initialize app and check authentication status on mount
+    // Handle initial authentication check only once
     useEffect(() => {
-        const initializeApp = async () => {
-            try {
-                // Set up CSRF protection
-                console.log('Initializing CSRF protection before call');
-                await initializeCsrf();
-                console.log('App initialized with CSRF token');
+        const checkAuth = async () => {
+            // Only check if not already authenticated
+            if (!isAuthenticated) {
+                const sessionToken = getCookie('sessionToken');
+                const userId = getCookie('userId');
 
-                // Check for existing user session in cookies or localStorage
-                const userId = getCookie('userId') || localStorage.getItem('userId');
-                if (userId) {
-                    login('sessionToken', { // Replace 'sessionToken' with actual token if available
+                if (sessionToken && userId) {
+                    login(sessionToken, {
                         id: parseInt(userId, 10),
-                        email: '',           // Add placeholder values or
-                        name: '',           // fetch these from storage/API
-                        surname: '',        // if available
-                        account_name: ''
+                        email: getCookie('userEmail') || '',
+                        name: getCookie('userName') || '',
+                        surname: getCookie('userSurname') || '',
+                        account_name: getCookie('userAccountName') || ''
                     });
-                    console.log('User authenticated:', { userId });
-                } else {
-                    console.log('No authenticated user found.');
                 }
-            } catch (error) {
-                console.error('Failed to initialize app:', error);
             }
         };
 
-        initializeApp();
-    }, [login]); // Re-run if session management functions change
+        checkAuth();
+    }, [isAuthenticated, login]); // Only depend on these values
 
-    // Render app with necessary providers and layout structure
+    // Handle mounting state
+    useEffect(() => {
+        setMounted(true);
+    }, []);
+
+    if (!mounted) {
+        return (
+            <html lang="en" suppressHydrationWarning>
+                <body suppressHydrationWarning>
+                    <div className="min-h-screen bg-background" />
+                </body>
+            </html>
+        );
+    }
+
     return (
-        <html lang="en">
-            <body>
+        <html lang="en" suppressHydrationWarning>
+            <body suppressHydrationWarning>
                 <NextUIProvider>
                     <NextThemesProvider
                         attribute="class"
                         defaultTheme="system"
                         enableSystem
+                        storageKey="theme-mode"
                     >
-                        <div className="min-h-screen flex flex-col">
+                        <div className="min-h-screen flex flex-col bg-background text-foreground transition-colors">
                             <Header />
-                            <main className="flex-grow">{children}</main>
+                            <main className="flex-grow">
+                                {children}
+                            </main>
+                            <ErrorModal
+                                isOpen={isOpen}
+                                onClose={hideError}
+                                error={error}
+                            />
                         </div>
                     </NextThemesProvider>
                 </NextUIProvider>

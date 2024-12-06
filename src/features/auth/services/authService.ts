@@ -1,7 +1,7 @@
 import { authApi } from '../api/authApi';
 import { AuthResponse, LoginRequest, SignUpRequest } from '../types/authTypes';
-import { useCookieStore } from '../stores/cookiesStore';
-import { useSessionStore } from '../stores/sessionStore';
+import { useCookieStore } from '@/features/auth/stores/cookiesStore';
+import useSessionStore from '@/features/auth/stores/sessionStore';
 import { setCookie } from '../api/cookies';
 import { withCsrfToken } from './cookiesService';
 
@@ -25,7 +25,9 @@ export const authService = {
     login: async (credentials: LoginRequest): Promise<AuthResponse> => {
         return withCsrfToken(async () => {
             try {
+                console.log('credentials', credentials);
                 const data = await authApi.login(credentials);
+                console.log('data', data);
                 const { token: sessionToken, user_id, email, name, surname, account_name } = data;
 
                 // Store session data in cookies for persistence
